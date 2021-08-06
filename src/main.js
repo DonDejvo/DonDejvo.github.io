@@ -18,8 +18,8 @@ class Game {
                 document.getElementById("loadingProgress").textContent = percents + "%";
                 console.log(`${percents}% ... ${obj.path}`);
             })
-            .SetPath("https://raw.githubusercontent.com/DonDejvo/GrottoEscape/main/res")
-            //.SetPath("res")
+            //.SetPath("https://raw.githubusercontent.com/DonDejvo/GrottoEscape/main/res")
+            .SetPath("res")
             .AddImage("tileset-image", "assets/png/environment-tiles.png")
             .AddImage("items", "assets/png/items.png")
             .AddImage("hp-bar", "assets/png/meter.png")
