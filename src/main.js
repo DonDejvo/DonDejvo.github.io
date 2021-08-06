@@ -24,9 +24,9 @@ class Game {
             .AddImage("player", "assets/spritesheets/player.png")
             .AddImage("skeleton", "assets/spritesheets/skeleton.png")
             .AddImage("enemies", "assets/spritesheets/enemies.png")
-            /*.AddAudio("jump-sound", "audio/sounds/jump.wav")
+            .AddAudio("jump-sound", "audio/sounds/jump.wav")
             .AddAudio("laser-sound", "audio/sounds/laser.wav")
-            .AddAudio("pickup-sound", "audio/sounds/pickup.wav")*/
+            .AddAudio("pickup-sound", "audio/sounds/pickup.wav")
             .AddJSON("tileset", "layouts/grottoEnvironment.json")
             .Load((data) => {
 
@@ -34,7 +34,12 @@ class Game {
     }
     _Init() {
         this._renderer = new Renderer(480, 720, document.querySelector(".gameContainer"), document.getElementById("game"));
-        this._Preload();
+        const eventByDevice = navigator.userAgent.match(/ipod|ipad|iphone/i) ? "touchstart" : "click";
+        window.addEventListener(eventByDevice, () => {
+            const emptySound = new Audio("empty.mp3");
+            emptySound.play();
+            this._Preload();
+        });
     }
 }
 
