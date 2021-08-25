@@ -1,0 +1,161 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent a girlfriend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Courier New', Courier, monospace
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .button-container {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: black;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+        }
+        .button-container button {
+            border: 2px solid white;
+            background: darkmagenta;
+            color: white;
+            padding: 6px;
+            outline: none;
+        }
+        .button-container input {
+            border: 2px solid white;
+            background-color: white;
+            outline: none;
+            padding: 6px;
+            max-width: 60px;
+        }
+        .image-container {
+            margin-top: 40px;
+        }
+        .image-container > img {
+            width: 100%;
+            display: block;
+        }
+        .container_disabled {
+            filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="button-container">
+            <div>
+                <button onclick="PrevChapter()">previous</button>
+                <button onclick="NextChapter()">next</button>
+            </div>
+            <div>
+                <input id="chapter-number-input" type="number" min="1" step="1" value="1">
+                <button onclick="OpenChapter()">go</button>
+            </div>
+        </div>
+        <div class="image-container"></div>
+    </div>
+    <script>
+
+        const ChangeChapter = (num) => {
+            if(num < 1 || busyWithLoading) return;
+            currentChapterNumber = num;
+            document.getElementById("chapter-number-input").value = num;
+            try {
+                localStorage.setItem("chapterNumber", currentChapterNumber);
+            } catch(err) {
+
+            }
+            LoadChapter();
+        }
+
+        const LoadChapter = () => {
+            
+            const FillZeros = (str, len) => {
+                
+                while(str.length < len) {
+                    str = "0" + str;
+                }
+
+                return str;
+            }
+            
+            const LoadImage = (idx = 1) => {
+
+                const url = "https://cdn.kanojo-okarishimasu.com/file/CDN-M-A-N/kanojo/";
+                const chapter = "chap" + currentChapterNumber;
+
+                const imageName = FillZeros(idx.toString(), 3) + ".jpg";
+                const image = document.createElement("img");
+
+                image.src = `${url + chapter + "/" + imageName}`;
+
+                image.onload = () => {
+                    imageContainer.appendChild(image);
+                    LoadImage(idx + 1);
+                }
+
+                image.onerror = () => {
+                    busyWithLoading = false;
+                    buttonContainer.classList.remove("container_disabled");
+                }
+            }
+
+            const buttonContainer = document.querySelector(".button-container");
+            const imageContainer = document.querySelector(".image-container");
+
+            busyWithLoading = true;
+            buttonContainer.classList.add("container_disabled");
+
+            imageContainer.innerHTML = "";
+            
+            LoadImage();
+        }
+
+        let busyWithLoading = false;
+        let currentChapterNumber;
+
+        try {
+            const num = parseInt(localStorage.getItem("chapterNumber"));
+            if(num !== null) {
+                ChangeChapter(num);
+            } else {
+                ChangeChapter(1);
+            }
+        } catch(err) {
+            ChangeChapter(1);
+        }
+
+
+        function OpenChapter() {
+            const num = parseInt(document.getElementById("chapter-number-input").value);
+            ChangeChapter(num);
+        }
+
+        function NextChapter() {
+            ChangeChapter(currentChapterNumber + 1);
+        }
+
+        function PrevChapter() {
+            ChangeChapter(currentChapterNumber - 1);
+        }
+
+    </script>
+</body>
+</html>
