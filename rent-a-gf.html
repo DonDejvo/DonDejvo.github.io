@@ -133,7 +133,7 @@
 
         try {
             const num = parseInt(localStorage.getItem("chapterNumber"));
-            if(num !== null) {
+            if(num) {
                 ChangeChapter(num);
             } else {
                 ChangeChapter(1);
